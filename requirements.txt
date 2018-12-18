@@ -24,3 +24,5 @@
 PyJWT==1.7.1
 requests==2.21.0
 twine==1.12.1
+requests==2.21.0
+django>=2.0,<3.0

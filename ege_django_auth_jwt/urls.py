@@ -21,10 +21,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-from django.conf.urls import url
-from . import views
+from django.urls import path, include
+from .views import LoginView, CompleteView
 
+app_name='ege_django_auth_jwt'
 urlpatterns = [
-    url(r'^jwt/login/$', views.jwt_login, name='login'),
-    url(r'^jwt/complete/$', views.jwt_complete, name='complete'),
+    path('jwt/login/', LoginView.as_view(), name='login'),
+    path('jwt/complete/', CompleteView.as_view(), name='complete'),
 ]

@@ -43,7 +43,7 @@ setup(
     author_email='kelson.medeiros@ifrn.edu.br',
     url='https://github.com/CoticEaDIFRN/ege_django_auth_jwt',
     keywords=['EGE', 'JWT', 'Django', 'Auth', 'SSO', 'client', ],
-    install_requires=['PyJWT==1.7.1', 'requests-2.21.0'],
+    install_requires=['PyJWT==1.7.1', 'requests==2.21.0', 'django>=2.0,<3.0'],
     classifiers=[]
 )
 """ > setup.py

@@ -24,5 +24,5 @@ SOFTWARE.
 from django.apps import AppConfig
 
 
-class SUAPSSO_JWT_Config(AppConfig):
+class EgeDjangoAuthJwtConfig(AppConfig):
     name = 'ege_django_auth_jwt'
