@@ -1,8 +1,20 @@
 # ege_django_auth_jwt
 ege_django_auth_jwt
 
+## How to install 
+```sh
+pip install ege_django_auth_jwt
+```
 
-
+## How to build
+```sh
+git clone git@github.com:CoticEaDIFRN/ege_django_auth_jwt.git
+cd ege_django_auth_jwt
+# local build only
+./release.sh 1.3
+# local build, send to Github, publish to PyPI
+./release.sh -d 1.3
+```
 
 # MIT License
 

@@ -80,10 +80,9 @@ if [[ $# -eq 2 ]] && [[ "$1" == "-d" || "$1" == "-g" || "$1" == "-p" ]]
         echo ""
         echo "PyPI Hub: Uploading"
         echo ""
-        #twine upload dist/python_brfied-$1.tar.gz
+        docker run --rm -it -v `pwd`:/src ifrn/ege.django_auth_jwt twine upload dist/ege_django_auth_jwt-$2.tar.gz
     fi
 fi
 
 echo ""
 echo "Done."
-
