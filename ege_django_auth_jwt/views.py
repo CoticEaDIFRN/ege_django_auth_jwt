@@ -54,7 +54,7 @@ class LoginView(View):
 
             original_next = urllib.quote_plus(request.GET.get('next', settings.LOGIN_REDIRECT_URL))
 
-            root_site_path = request.build_absolute_uri(reverse('suapsso_jwt:complete'))
+            root_site_path = request.build_absolute_uri(reverse('ege_django_auth_jwt:complete'))
             redirect_uri = urllib.quote_plus('{root_site_path}?original_next={original_next}'.
                                              format(root_site_path=root_site_path,
                                                     transaction_token=transaction_token,

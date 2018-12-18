@@ -1,43 +1,89 @@
+#!/usr/bin/env bash
+
 if [ $# -eq 0 ]
   then
-    echo "Informe apenas a versão para gerar apenas localmente:"
-    echo "  release 1.1"
-    echo "ou informe -d e a versão para enviar para o Docker Hub:"
-    echo "  release -d 1.1"
+    echo "NAME
+       release
+
+SYNOPSIS
+       ./release.sh [-d|-p|-g] <version>
+
+DESCRIPTION
+       Create a new release to ege_django_auth_jwt python package.
+
+OPTIONS
+       -d         Deploy to Github and PyPI
+       -p         Deploy to PyPI
+       -g         Deploy to Github
+       <version>  Release version number
+
+EXAMPLES
+       o   Build to local usage only:
+                  ./release.sh 1.1
+       o   Build and deploy to both Github and PyPI:
+                  ./release.sh -d 1.1
+       o   Build and deploy to PyPI only:
+                  ./release.sh -p 1.1
+       o   Build and deploy to Github only:
+                  ./release.sh -g 1.1
+"
 fi
 
-if [ $# -eq 1 ]
+
+create_setup_cfg_file() {
+    echo """# -*- coding: utf-8 -*-
+from distutils.core import setup
+setup(
+    name='ege_django_auth_jwt',
+    packages=['ege_django_auth_jwt', ],
+    version='$1',
+    download_url='https://github.com/CoticEaDIFRN/ege_django_auth_jwt/releases/tag/$1',
+    description='EGE JWT authentication for Django',
+    author='Kelson da Costa Medeiros',
+    author_email='kelson.medeiros@ifrn.edu.br',
+    url='https://github.com/CoticEaDIFRN/ege_django_auth_jwt',
+    keywords=['EGE', 'JWT', 'Django', 'Auth', 'SSO', 'client', ],
+    install_requires=['PyJWT==1.7.1', 'requests-2.21.0'],
+    classifiers=[]
+)
+""" > setup.py
+    docker build -t ifrn/ege.django_auth_jwt --force-rm .
+    docker run --rm -it -v `pwd`:/src ifrn/ege.django_auth_jwt python setup.py sdist
+}
+
+if [[ $# -eq 1 ]]
   then
-    echo "Generating local version $1"
+    echo "Build to local usage only. Version: $1"
     echo ""
-    docker build -t ifrn/ege.django_base:$1 --force-rm .
+    create_setup_cfg_file $1
 fi
 
-if [ $# -eq 2 ] && [[ "$1" == "-d" || "$1" == "-gh" || "$1" == "-dh" ]]
+if [[ $# -eq 2 ]] && [[ "$1" == "-d" || "$1" == "-g" || "$1" == "-p" ]]
   then
-    echo "Generating and deploy version $2"
+    echo "Build to local. Version: $2"
     echo ""
+    create_setup_cfg_file $2
 
-    if [[ "$1" == "-d" || "$1" == "-dh" ]]
+    if [[ "$1" == "-d" || "$1" == "-g" ]]
       then
         echo ""
-        echo "Docker Hub: Building and sending"
+        echo "GitHub: Pushing"
         echo ""
-        docker build -t ifrn/ege.django_base:$2 --force-rm .
-        docker login
-        docker push ifrn/ege.django_base:$2
-    fi
-
-    if [[ "$1" == "-d" || "$1" == "-gh" ]]
-      then
-        echo ""
-        echo "GitHub: Committing and pushing"
-        echo ""
-        git commit -m 'Release $2'
+        git add setup.py
+        git commit -m "Release $2"
         git tag $2
         git push --tags origin master
+    fi
+
+    if [[ "$1" == "-d" || "$1" == "-p" ]]
+      then
+        echo ""
+        echo "PyPI Hub: Uploading"
+        echo ""
+        #twine upload dist/python_brfied-$1.tar.gz
     fi
 fi
 
 echo ""
 echo "Done."
+

@@ -25,4 +25,4 @@ from django.apps import AppConfig
 
 
 class SUAPSSO_JWT_Config(AppConfig):
-    name = 'suapsso_jwt'
+    name = 'ege_django_auth_jwt'
