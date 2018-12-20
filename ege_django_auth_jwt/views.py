@@ -21,16 +21,14 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-import json
 import jwt
 import requests
 from urllib.parse import quote_plus
 from django.conf import settings
 from django.shortcuts import redirect, reverse, render
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse
 from django.views.generic import View
-from django.apps import apps
+from django.contrib.auth import logout as auth_logout
 
 
 def instantiate_class(full_class_name, *args, **kwargs):
@@ -79,3 +77,8 @@ class CompleteView(View):
                 return redirect(settings.LOGIN_REDIRECT_URL)
         else:
             return render(request, 'ege_django_auth_jwt/user_dont_exists.html', context={'logout_url': settings.LOGOUT_URL})
+
+
+def jwt_logout(request):
+    auth_logout(request)
+    return redirect(settings.EGE_ACESSO_JWT_LOGOUT)
