@@ -26,17 +26,18 @@ import jwt
 import requests
 from urllib.parse import quote_plus
 from django.conf import settings
-from django.shortcuts import redirect, reverse
+from django.shortcuts import redirect, reverse, render
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from django.views.generic import View
+from django.apps import apps
 
-"""
-http://provider:8001/jwt/authorize
-/?client_id=_EGE_JWT_CLIENT_ID_
-&redirect_uri=http%3A%2F%2Fclient%3A8000%2Fjwt%2Fcomplete%2Fjwt%2Fcomplete%2F%3Foriginal_next%3D%252Fdashboard
-"""
-EGE_VALIDATE_JWT_VALIDATE_PATTERN = ''
+
+def instantiate_class(full_class_name, *args, **kwargs):
+    import importlib
+    module_name, class_name = full_class_name.rsplit(".", 1)
+    MyClass = getattr(importlib.import_module(module_name), class_name)
+    return MyClass(*args, **kwargs)
 
 
 class LoginView(View):
@@ -63,21 +64,18 @@ class LoginView(View):
 class CompleteView(View):
     @csrf_exempt
     def get(self, request):
-        print('%s?client_id=%s&auth_token=%s' %
-                                 (settings.EGE_ACESSO_JWT_VALIDATE,
-                                  settings.EGE_ACESSO_JWT_CLIENT_ID,
-                                  request.GET['auth_token']))
         response = requests.get('%s?client_id=%s&auth_token=%s' %
                                 (settings.EGE_ACESSO_JWT_VALIDATE,
                                  settings.EGE_ACESSO_JWT_CLIENT_ID,
                                  request.GET['auth_token']))
         if response.status_code != 200:
-            raise Exception("Authentication erro! Invalid status code %s. Error: <br />%s" %
-                            (response.status_code, response.text))
-        return HttpResponse("JWT_COMPLETE [%s]" % response.text)
-"""
-EGE_ACESSO_URL=http://acesso/id/acesso/
-EGE_ACESSO_JWT_AUTHORIZE=http://localhost/id/acesso/jwt/authorize/
-EGE_ACESSO_JWT_VALIDATE=http://localhost/id/acesso/jwt/validate/
-EGE_ACESSO_JWT_CLIENT_ID=_EGE_ACESSO_JWT_CLIENT_ID_
-"""
+            raise Exception("Authentication erro! Invalid status code %s." % (response.status_code, ))
+        data = jwt.decode(response.text, key=settings.EGE_ACESSO_JWT_SECRET, algorithm='HS512')
+        instantiate_class(settings.EGE_ACESSO_BACKEND).login_user(request, data)
+        if request.user.is_authenticated:
+            if 'original_next' in request.GET:
+                return redirect(request.GET['original_next'])
+            else:
+                return redirect(settings.LOGIN_REDIRECT_URL)
+        else:
+            return render(request, 'ege_django_auth_jwt/user_dont_exists.html', context={'logout_url': settings.LOGOUT_URL})
