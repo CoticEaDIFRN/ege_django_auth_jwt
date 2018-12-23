@@ -26,15 +26,11 @@ from django.contrib.auth import get_user_model, login
 
 class PreExistentUserJwtBackend:
     def login_user(self, request, data):
-        try:
-            user = get_user_model().objects.get(username=data['username'])
-            login(request, user, backend=None)
-        except Exception as ex:
-            pass
+        user = get_user_model().objects.get(username=data['username'])
+        login(request, user, backend=None)
 
 
 class CreateNewUserJwtBackend:
     def login_user(self, request, data):
         user, created = get_user_model().objects.get_or_create(username=data['username'])
-        # user = get_user_model().objects.get_or_create(username=data['username'], defaults=data)
         login(request, user, backend=None)
