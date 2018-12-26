@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 import jwt
+import uuid
 import requests
 from urllib.parse import quote_plus
 from django.conf import settings
@@ -44,7 +45,8 @@ class LoginView(View):
         if request.user.is_authenticated:
             return redirect(settings.LOGIN_REDIRECT_URL)
         else:
-            transaction_token = '1'
+            data = {'client_id': settings.EGE_ACESSO_JWT_CLIENT_ID, 'uuid': '%s' % uuid.uuid1()}
+            transaction_token = jwt.encode(data, settings.EGE_ACESSO_JWT_SECRET, algorithm='HS512').decode("utf-8")
             request.session['transaction_token'] = transaction_token
 
             original_next = quote_plus(request.GET.get('next', settings.LOGIN_REDIRECT_URL))
@@ -68,7 +70,7 @@ class CompleteView(View):
                                  request.GET['auth_token']))
         if response.status_code != 200:
             raise Exception("Authentication erro! Invalid status code %s." % (response.status_code, ))
-        data = jwt.decode(response.text, key=settings.EGE_ACESSO_JWT_SECRET, algorithm='HS512')
+        data = jwt.decode(response.text, settings.EGE_ACESSO_JWT_SECRET, algorithm='HS512')
         instantiate_class(settings.EGE_ACESSO_BACKEND).login_user(request, data)
         if request.user.is_authenticated:
             if 'original_next' in request.GET:
