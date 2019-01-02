@@ -28,9 +28,11 @@ class PreExistentUserJwtBackend:
     def login_user(self, request, data):
         user = get_user_model().objects.get(username=data['username'])
         login(request, user, backend=None)
+        user.jwt_data = data
 
 
 class CreateNewUserJwtBackend:
     def login_user(self, request, data):
         user, created = get_user_model().objects.get_or_create(username=data['username'])
         login(request, user, backend=None)
+        user.jwt_data = data
