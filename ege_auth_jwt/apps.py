@@ -25,4 +25,4 @@ from django.apps import AppConfig
 
 
 class EgeDjangoAuthJwtConfig(AppConfig):
-    name = 'ege_django_auth_jwt'
+    name = 'ege_auth_jwt'

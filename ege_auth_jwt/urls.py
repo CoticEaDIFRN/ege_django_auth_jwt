@@ -24,7 +24,7 @@ SOFTWARE.
 from django.urls import path, include
 from .views import LoginView, CompleteView
 
-app_name='ege_django_auth_jwt'
+app_name='ege_auth_jwt'
 urlpatterns = [
     path('jwt/login/', LoginView.as_view(), name='login'),
     path('jwt/complete/', CompleteView.as_view(), name='complete'),

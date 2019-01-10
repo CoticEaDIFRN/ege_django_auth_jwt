@@ -51,7 +51,7 @@ class LoginView(View):
 
             original_next = quote_plus(request.GET.get('next', settings.LOGIN_REDIRECT_URL))
 
-            root_site_path = request.build_absolute_uri(reverse('ege_django_auth_jwt:complete'))
+            root_site_path = request.build_absolute_uri(reverse('ege_auth_jwt:complete'))
             redirect_uri = quote_plus('%s?original_next=%s' % (root_site_path, original_next))
 
             return redirect('%s?client_id=%s&state=%s&redirect_uri=%s' %
@@ -71,14 +71,14 @@ class CompleteView(View):
         if response.status_code != 200:
             raise Exception("Authentication erro! Invalid status code %s." % (response.status_code, ))
         data = jwt.decode(response.text, settings.EGE_ACESSO_JWT_SECRET, algorithm='HS512')
-        instantiate_class(settings.EGE_ACESSO_BACKEND).login_user(request, data)
+        instantiate_class(settings.EGE_AUTH_JWT_BACKEND).login_user(request, data)
         if request.user.is_authenticated:
             if 'original_next' in request.GET:
                 return redirect(request.GET['original_next'])
             else:
                 return redirect(settings.LOGIN_REDIRECT_URL)
         else:
-            return render(request, 'ege_django_auth_jwt/user_dont_exists.html', context={'logout_url': settings.LOGOUT_URL})
+            return render(request, 'ege_auth_jwt/user_dont_exists.html', context={'logout_url': settings.LOGOUT_URL})
 
 
 def jwt_logout(request):
