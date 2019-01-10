@@ -3,8 +3,8 @@ from distutils.core import setup
 setup(
     name='ege_auth_jwt',
     packages=['ege_auth_jwt', ],
-    version='1.1.0',
-    download_url='https://github.com/CoticEaDIFRN/ege_auth_jwt/releases/tag/1.1.0',
+    version='1.1.1',
+    download_url='https://github.com/CoticEaDIFRN/ege_auth_jwt/releases/tag/1.1.1',
     description='JWT authentication for Django from EGE project',
     long_description='JWT authentication for Django EGE project',
     author='Kelson da Costa Medeiros',
