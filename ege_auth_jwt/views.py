@@ -30,6 +30,17 @@ from django.shortcuts import redirect, reverse, render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
 from django.contrib.auth import logout as auth_logout
+from django.views.decorators.cache import never_cache
+
+
+@never_cache
+def redirect_to_login(request, extra_context=None):
+    return redirect(settings.LOGIN_URL)
+
+
+@never_cache
+def redirect_to_logout(request, extra_context=None):
+    return redirect(settings.LOGOUT_URL)
 
 
 def instantiate_class(full_class_name, *args, **kwargs):
