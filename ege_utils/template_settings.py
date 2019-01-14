@@ -38,6 +38,7 @@ DEBUG_TOOLBAR_CONFIG = {
 
 # Apps
 MY_APPS = env_as_list('MY_APPS', '')
+MY_LIBS = env_as_list('MY_LIBS', 'ege_auth_jwt,ege_theme')
 DEV_APPS = env_as_list('DEV_APPS', 'debug_toolbar,django_extensions' if DEBUG else '')
 THIRD_APPS = env_as_list('THIRD_APPS', 'rest_framework')
 DJANGO_APPS = env_as_list('DJANGO_APPS', 'django.contrib.admin,'
@@ -72,7 +73,7 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'ege_perfil.context_processors.ege',
+                'ege_utils.context_processors.ege',
                 'django.contrib.messages.context_processors.messages',
             ],
         },
@@ -86,7 +87,7 @@ DATABASES = {
         'ENGINE': env('POSTGRES_ENGINE', 'django.db.backends.postgresql_psycopg2'),
         'HOST': env('POSTGRES_HOST', 'db'),
         'PORT': env('POSTGRES_PORT', '5432'),
-        'NAME': env('POSTGRES_DB_PERFIL', 'ege_perfil'),
+        'NAME': env('POSTGRES_DB', None),
         'USER': env('POSTGRES_USER', 'postgres'),
         'PASSWORD': env('POSTGRES_PASSWORD', 'postgres'),
     }
