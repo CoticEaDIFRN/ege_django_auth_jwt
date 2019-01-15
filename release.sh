@@ -9,7 +9,7 @@ SYNOPSIS
        ./release.sh [-d|-p|-g] <version>
 
 DESCRIPTION
-       Create a new release to ege_auth_jwt python package.
+       Create a new release to ege_utils python package.
 
 OPTIONS
        -d         Deploy to Github and PyPI
@@ -34,22 +34,22 @@ create_setup_cfg_file() {
     echo """# -*- coding: utf-8 -*-
 from distutils.core import setup
 setup(
-    name='ege_auth_jwt',
-    packages=['ege_auth_jwt', ],
+    name='ege_utils',
+    packages=['ege_utils', ],
     version='$1',
-    download_url='https://github.com/CoticEaDIFRN/ege_auth_jwt/releases/tag/$1',
-    description='JWT authentication for Django from EGE project',
-    long_description='JWT authentication for Django EGE project',
+    download_url='https://github.com/CoticEaDIFRN/ege_utils/releases/tag/$1',
+    description='Utils classes for EGE project',
+    long_description='Utils classes for EGE project',
     author='Kelson da Costa Medeiros',
     author_email='kelsoncm@ifrn.edu.br',
-    url='https://github.com/CoticEaDIFRN/ege_auth_jwt',
+    url='https://github.com/CoticEaDIFRN/ege_utils',
     keywords=['EGE', 'JWT', 'Django', 'Auth', 'SSO', 'client', ],
     install_requires=['PyJWT==1.7.1', 'requests==2.21.0', 'django>=2.0,<3.0'],
     classifiers=[]
 )
 """ > setup.py
-    docker build -t ifrn/ege.auth_jwt --force-rm .
-    docker run --rm -it -v `pwd`:/src ifrn/ege.auth_jwt python setup.py sdist
+    docker build -t ifrn/ege.utils --force-rm .
+    docker run --rm -it -v `pwd`:/src ifrn/ege.utils python setup.py sdist
 }
 
 if [[ $# -eq 1 ]]
@@ -81,7 +81,7 @@ if [[ $# -eq 2 ]] && [[ "$1" == "-d" || "$1" == "-g" || "$1" == "-p" ]]
         echo ""
         echo "PyPI Hub: Uploading"
         echo ""
-        docker run --rm -it -v `pwd`:/src ifrn/ege.auth_jwt twine upload dist/ege_auth_jwt-$2.tar.gz
+        docker run --rm -it -v `pwd`:/src ifrn/ege.utils twine upload dist/ege_utils-$2.tar.gz
     fi
 fi
 

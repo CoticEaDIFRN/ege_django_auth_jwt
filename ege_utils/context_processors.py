@@ -17,13 +17,8 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-
-
-class Ege:
-    def __init__(self, user, profile):
-        self.user = user
-        self.profile = profile
+from . import Ege
 
 
 def ege(request):
-    return {'ege': Ege(request.session['ege']['user'], request.user)}
+    return {'ege': request.session['ege']}

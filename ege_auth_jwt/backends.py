@@ -22,23 +22,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 from django.contrib.auth import get_user_model, login
-
-
-class Ege:
-
-    def __init__(self, user):
-        self.user = user
+from ege_utils import Ege
 
 
 class PreExistentUserJwtBackend:
-    def login_user(self, request, data):
-        user = get_user_model().objects.get(username=data['username'])
+    def login_user(self, request, user_data):
+        user = get_user_model().objects.get(username=user_data['username'])
         login(request, user, backend=None)
-        request.session['ege'] = {'user': data}
+
+        request.session['ege'] = Ege(user_data)
 
 
 class CreateNewUserJwtBackend:
-    def login_user(self, request, data):
-        user, created = get_user_model().objects.get_or_create(username=data['username'])
+    def login_user(self, request, user_data):
+        user, created = get_user_model().objects.get_or_create(username=user_data['username'])
         login(request, user, backend=None)
-        request.session['ege'] = {'user': data}
+        request.session['ege'] = {'user': user_data}
