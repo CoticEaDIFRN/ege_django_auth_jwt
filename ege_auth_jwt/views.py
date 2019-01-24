@@ -75,14 +75,16 @@ class LoginView(View):
 class CompleteView(View):
     @csrf_exempt
     def get(self, request):
-        response = requests.get('%s?client_id=%s&auth_token=%s' %
-                                (settings.EGE_ACESSO_JWT_VALIDATE,
-                                 settings.EGE_ACESSO_JWT_CLIENT_ID,
-                                 request.GET['auth_token']))
-        if response.status_code != 200:
-            raise Exception("Authentication erro! Invalid status code %s." % (response.status_code, ))
-        data = jwt.decode(response.text, settings.EGE_ACESSO_JWT_SECRET, algorithm='HS512')
-        instantiate_class(settings.EGE_AUTH_JWT_BACKEND).login_user(request, data)
+        user_response = requests.get('%s?client_id=%s&auth_token=%s' %
+                                     (settings.EGE_ACESSO_JWT_VALIDATE,
+                                      settings.EGE_ACESSO_JWT_CLIENT_ID,
+                                      request.GET['auth_token']))
+        profile_response = requests.get('http://perfil:8000/ege/perfil')
+        if user_response.status_code != 200:
+            raise Exception("Authentication erro! Invalid status code %s." % (user_response.status_code, ))
+        user_data = jwt.decode(user_response.text, settings.EGE_ACESSO_JWT_SECRET, algorithm='HS512')
+        profile_data = profile_response.status_code
+        instantiate_class(settings.EGE_AUTH_JWT_BACKEND).login_user(request, user_data, profile_data)
         if request.user.is_authenticated:
             if 'original_next' in request.GET:
                 return redirect(request.GET['original_next'])
