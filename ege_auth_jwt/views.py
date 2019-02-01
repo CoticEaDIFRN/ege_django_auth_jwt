@@ -79,11 +79,18 @@ class CompleteView(View):
                                      (settings.EGE_ACESSO_JWT_VALIDATE,
                                       settings.EGE_ACESSO_JWT_CLIENT_ID,
                                       request.GET['auth_token']))
-        profile_response = requests.get('http://perfil:8000/ege/perfil')
+
+        user_data = jwt.decode(user_response.text, settings.EGE_ACESSO_JWT_SECRET, algorithm='HS512')
+
         if user_response.status_code != 200:
             raise Exception("Authentication erro! Invalid status code %s." % (user_response.status_code, ))
-        user_data = jwt.decode(user_response.text, settings.EGE_ACESSO_JWT_SECRET, algorithm='HS512')
-        profile_data = profile_response.status_code
+
+        # profile_response = requests.head('http://localhost/ege/perfil/api/v1/profile/')
+        # profile_response = requests.get('https://swapi.co/api/people/1')
+        profile_response = {}
+
+        profile_data = profile_response
+
         instantiate_class(settings.EGE_AUTH_JWT_BACKEND).login_user(request, user_data, profile_data)
         if request.user.is_authenticated:
             if 'original_next' in request.GET:

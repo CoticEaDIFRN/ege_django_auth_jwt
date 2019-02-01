@@ -20,6 +20,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 class Ege:
-    def __init__(self, user, profile=None):
+    def __init__(self, user, profile):
         self.user = user
         self.profile = profile
