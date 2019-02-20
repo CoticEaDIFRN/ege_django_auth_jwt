@@ -1,15 +1,15 @@
-# ege_auth_jwt
-ege_auth_jwt
+# ege_utils
+ege_utils
 
 ## How to install 
 ```sh
-pip install ege_auth_jwt
+pip install ege_utils
 ```
 
 ## How to build
 ```sh
-git clone git@github.com:CoticEaDIFRN/ege_auth_jwt.git
-cd ege_auth_jwt
+git clone git@github.com:CoticEaDIFRN/ege_utils.git
+cd ege_utils
 # local build only
 ./release.sh 1.3
 # local build, send to Github, publish to PyPI

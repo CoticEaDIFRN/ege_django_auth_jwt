@@ -62,7 +62,7 @@ class LoginView(View):
 
             original_next = quote_plus(request.GET.get('next', settings.LOGIN_REDIRECT_URL))
 
-            root_site_path = request.build_absolute_uri(reverse('ege_auth_jwt:complete'))
+            root_site_path = request.build_absolute_uri(reverse('ege_utils:complete'))
             redirect_uri = quote_plus('%s?original_next=%s' % (root_site_path, original_next))
 
             return redirect('%s?client_id=%s&state=%s&redirect_uri=%s' %
@@ -89,14 +89,14 @@ class CompleteView(View):
 
         profile_data = profile_response
 
-        instantiate_class(settings.EGE_AUTH_JWT_BACKEND).login_user(request, user_data, profile_data)
+        instantiate_class(settings.EGE_UTILS_AUTH_JWT_BACKEND).login_user(request, user_data, profile_data)
         if request.user.is_authenticated:
             if 'original_next' in request.GET:
                 return redirect(request.GET['original_next'])
             else:
                 return redirect(settings.LOGIN_REDIRECT_URL)
         else:
-            return render(request, 'ege_auth_jwt/user_dont_exists.html', context={'logout_url': settings.LOGOUT_URL})
+            return render(request, 'ege_utils/user_dont_exists.html', context={'logout_url': settings.LOGOUT_URL})
 
 
 def jwt_logout(request):

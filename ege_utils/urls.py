@@ -24,7 +24,7 @@ SOFTWARE.
 from django.urls import path, include
 from .views import LoginView, CompleteView, redirect_to_login, redirect_to_logout
 
-app_name='ege_auth_jwt'
+app_name='ege_utils'
 urlpatterns = [
     path('jwt/login/', LoginView.as_view(), name='login'),
     path('jwt/complete/', CompleteView.as_view(), name='complete'),

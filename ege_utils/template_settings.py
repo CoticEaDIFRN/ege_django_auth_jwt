@@ -124,7 +124,7 @@ EGE_ACESSO_JWT_VALIDATE = env("EGE_ACESSO_JWT_VALIDATE", 'http://acesso:8000/ege
 EGE_ACESSO_JWT_LOGOUT = env("EGE_ACESSO_JWT_LOGOUT", 'http://acesso:8000/ege/acesso/logout/')
 EGE_ACESSO_JWT_CLIENT_ID = env("EGE_ACESSO_JWT_CLIENT_ID", '_EGE_ACESSO_JWT_CLIENT_ID_')
 EGE_ACESSO_JWT_SECRET = env("EGE_ACESSO_JWT_SECRET", '_EGE_ACESSO_JWT_SECRET_')
-EGE_AUTH_JWT_BACKEND = env("EGE_AUTH_JWT_BACKEND", 'ege_auth_jwt.backends.PreExistentUserJwtBackend')
+EGE_UTILS_AUTH_JWT_BACKEND = env("EGE_UTILS_AUTH_JWT_BACKEND", 'ege_utils.backends.PreExistentUserJwtBackend')
 
 AUTH_USER_MODEL = env("DJANGO_AUTH_USER_MODEL", 'ege_perfil.Profile')
 
@@ -137,7 +137,7 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'ege_auth_jwt.authentication.SecretDelegateAuthentication',
+        'ege_utils.authentication.SecretDelegateAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': [
