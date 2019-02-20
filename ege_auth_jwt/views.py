@@ -85,8 +85,6 @@ class CompleteView(View):
         if user_response.status_code != 200:
             raise Exception("Authentication erro! Invalid status code %s." % (user_response.status_code, ))
 
-        # profile_response = requests.head('http://localhost/ege/perfil/api/v1/profile/')
-        # profile_response = requests.get('https://swapi.co/api/people/1')
         profile_response = {}
 
         profile_data = profile_response
