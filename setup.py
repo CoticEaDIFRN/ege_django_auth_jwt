@@ -3,8 +3,8 @@ from distutils.core import setup
 setup(
     name='ege_utils',
     packages=['ege_utils', ],
-    version='1.2.0',
-    download_url='https://github.com/CoticEaDIFRN/ege_utils/releases/tag/1.2.0',
+    version='1.2.1',
+    download_url='https://github.com/CoticEaDIFRN/ege_utils/releases/tag/1.2.1',
     description='Utils classes for EGE project',
     long_description='Utils classes for EGE project',
     author='Kelson da Costa Medeiros',
