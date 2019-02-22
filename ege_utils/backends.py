@@ -26,14 +26,14 @@ from ege_utils import Ege
 
 
 class PreExistentUserJwtBackend:
-    def login_user(self, request, user_data, profile_data):
+    def login_user(self, request, user_data):
         user = get_user_model().objects.get(username=user_data['username'])
         login(request, user, backend=None)
         request.session['ege'] = Ege(user_data)
 
 
 class CreateNewUserJwtBackend:
-    def login_user(self, request, user_data, profile_data):
+    def login_user(self, request, user_data):
         user, created = get_user_model().objects.get_or_create(username=user_data['username'])
         login(request, user, backend=None)
-        request.session["ege"] = {"user": user_data, "profile": profile_data}
+        request.session["ege"] = {"user": user_data}

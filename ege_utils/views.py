@@ -85,11 +85,7 @@ class CompleteView(View):
         if user_response.status_code != 200:
             raise Exception("Authentication erro! Invalid status code %s." % (user_response.status_code, ))
 
-        profile_response = {}
-
-        profile_data = profile_response
-
-        instantiate_class(settings.EGE_UTILS_AUTH_JWT_BACKEND).login_user(request, user_data, profile_data)
+        instantiate_class(settings.EGE_UTILS_AUTH_JWT_BACKEND).login_user(request, user_data)
         if request.user.is_authenticated:
             if 'original_next' in request.GET:
                 return redirect(request.GET['original_next'])
