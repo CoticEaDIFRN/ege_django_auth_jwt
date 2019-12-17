@@ -1,91 +1,94 @@
 #!/usr/bin/env bash
+FULL_IMAGE_NAME="ifrn/ege.utils"
+PROJECT_NAME="ege.utils"
+ROOT_DIR=$( pwd )
+time source $ROOT_DIR/release-base.sh
 
-if [ $# -eq 0 ]
-  then
-    echo "NAME
-       release
 
-SYNOPSIS
-       ./release.sh [-d|-p|-g] <version>
-
-DESCRIPTION
-       Create a new release to ege_utils python package.
-
-OPTIONS
-       -d         Deploy to Github and PyPI
-       -p         Deploy to PyPI
-       -g         Deploy to Github
-       <version>  Release version number
-
-EXAMPLES
-       o   Build to local usage only:
-                  ./release.sh 1.1
-       o   Build and deploy to both Github and PyPI:
-                  ./release.sh -d 1.1
-       o   Build and deploy to PyPI only:
-                  ./release.sh -p 1.1
-       o   Build and deploy to Github only:
-                  ./release.sh -g 1.1
-"
+if [ $# -eq 0 ]; then
+  echo ''
+  echo 'NAME '
+  echo '       release'
+  echo 'SYNOPSIS'
+  echo '       ./release.sh [-l|-g|-p|-a] <version>'
+  echo 'DESCRIPTION'
+  echo '       Create a new release $PROJECT_NAME image.'
+  echo 'OPTIONS'
+  echo '       -l         Build only locally'
+  echo '       -g         Push to Github'
+  echo '       -p         Registry on PyPi'
+  echo '       -a         Push and registry on Github'
+  echo '       <version>  Release version number'
+  echo 'EXAMPLES'
+  echo '       o   Build a image to local usage only:'
+  echo '                  ./release.sh -l 1.0'
+  echo '       o   Build and push to GitHub:'
+  echo '                  ./release.sh -g 1.0'
+  echo '       o   Build and registry on PyPi:'
+  echo '                  ./release.sh -p 1.0'
+  echo '       o   Build, push to Guthub and registry on PyPi:'
+  echo '                  ./release.sh -a 1.0'
+  echo "LAST TAG: $(git tag | tail -1 )"
+  exit
 fi
 
+OPTION=$1
+VERSION=$2
 
 create_setup_cfg_file() {
-    echo """# -*- coding: utf-8 -*-
-from distutils.core import setup
-setup(
-    name='ege_utils',
-    description='Utils classes for EGE project',
-    long_description='Utils classes for EGE project',
-    license='MIT',
-    author='Kelson da Costa Medeiros',
-    author_email='kelsoncm@gmail.com',
-    packages=['ege_utils', 'ege_utils/templates'],
-    include_package_data=True,
-    version='$1',
-    download_url='https://github.com/CoticEaDIFRN/ege_utils/releases/tag/$1',
-    url='https://github.com/CoticEaDIFRN/ege_utils',
-    keywords=['EGE', 'JWT', 'Django', 'Auth', 'SSO', 'client', ],
-    install_requires=['PyJWT==1.7.1', 'requests==2.21.0', 'django>=2.0,<3.0'],
-    classifiers=[]
-)
-""" > setup.py
-    docker build -t ifrn/ege.utils --force-rm .
-    docker run --rm -it -v `pwd`:/src ifrn/ege.utils python setup.py sdist
+  printf "\n\nCREATE setup.cfg file\n"
+  sed "s/lib_version/$VERSION/g" $ROOT_DIR/setup.pytemplate > $ROOT_DIR/setup.py 
 }
 
-if [[ $# -eq 1 ]]
+build_docker() {
+  printf "\n\nBUILD local version $FULL_IMAGE_NAME:latest\n"
+  docker build -t $FULL_IMAGE_NAME:latest --force-rm .
+}
+
+lint_project() {
+  printf "\n\nLINT project $PROJECT_NAME $VERSION\n"
+  docker run --rm -it  -v `pwd`:/src $FULL_IMAGE_NAME:latest sh -c 'flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics && flake8 . --exclude=test_ege_utils/settings.py --count --max-complexity=10 --max-line-length=127 --statistics'
+}
+
+test_project() {
+  printf "\n\nTEST project $PROJECT_NAME $VERSION\n"
+  docker run --rm -it --env-file=test_ege_utils/.env  -v `pwd`:/src $FULL_IMAGE_NAME:latest sh -c 'pip install /src && cd test_ege_utils && coverage run --source="..,test_ege_utils" manage.py test . test_me && coverage report -m' 
+  # ./test_ege_utils/settings.py:1:1:
+}
+
+build_project() {
+  printf "\n\nBUILD project $PROJECT_NAME $VERSION\n"
+  docker run --rm -it  -v `pwd`:/src $FULL_IMAGE_NAME:latest sh -c 'python setup.py sdist' 
+}
+
+
+push_to_github() {
+  if [[ "$OPTION" == "-g" || "$OPTION" == "-a" ]]
   then
-    echo "Build to local usage only. Version: $1"
-    echo ""
-    create_setup_cfg_file $1
-fi
+    printf "\n\n\GITHUB: Pushing\n"
+    git add $PROJECT_NAME/setup.py \
+    && git commit -m "Release $PROJECT_NAME $VERSION" \
+    && git tag $VERSION \
+    && git push --tags origin master
+  fi
+}
 
-if [[ $# -eq 2 ]] && [[ "$1" == "-d" || "$1" == "-g" || "$1" == "-p" ]]
+send_to_pypi() {
+  if [[ "$OPTION" == "-p" || "$OPTION" == "-a" ]]
   then
-    echo "Build to local. Version: $2"
-    echo ""
-    create_setup_cfg_file $2
+    printf "\n\n\PYPI: Uploading\n"
+    docker run --rm -it -v `pwd`/$PROJECT_NAME:/src $FULL_IMAGE_NAME:latest twine upload dist/$PROJECT_NAME-$VERSION.tar.gz
+  fi
+}
 
-    if [[ "$1" == "-d" || "$1" == "-g" ]]
-      then
-        echo ""
-        echo "GitHub: Pushing"
-        echo ""
-        git add setup.py
-        git commit -m "Release $2"
-        git tag $2
-        git push --tags origin master
-    fi
+create_setup_cfg_file \
+&& build_docker \
+&& lint_project \
+&& build_project \
+&& test_project \
+&& push_to_github \
+&& send_to_pypi
 
-    if [[ "$1" == "-d" || "$1" == "-p" ]]
-      then
-        echo ""
-        echo "PyPI Hub: Uploading"
-        echo ""
-        docker run --rm -it -v `pwd`:/src ifrn/ege.utils twine upload dist/ege_utils-$2.tar.gz
-    fi
-fi
-
+echo $?
 echo ""
 echo "Done."

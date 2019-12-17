@@ -17,7 +17,7 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
-from python_brfied.env import env, env_as_bool, env_as_list
+from sc4py.env import env, env_as_bool, env_as_list
 
 # BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -32,7 +32,7 @@ LOGGING = {
     },
 }
 DEBUG_TOOLBAR_CONFIG = {
-    'SHOW_TOOLBAR_CALLBACK': lambda request: 'localhost' in request.get_host() or '127.0.0.1' in request.get_host() or 'sso' in request.get_host(),
+    'SHOW_TOOLBAR_CALLBACK': lambda request: request.get_host() in ['localhost', '127.0.0.1', 'sso'],
 }
 
 
@@ -126,7 +126,7 @@ EGE_ACESSO_JWT_CLIENT_ID = env("EGE_ACESSO_JWT_CLIENT_ID", '_EGE_ACESSO_JWT_CLIE
 EGE_ACESSO_JWT_SECRET = env("EGE_ACESSO_JWT_SECRET", '_EGE_ACESSO_JWT_SECRET_')
 EGE_UTILS_AUTH_JWT_BACKEND = env("EGE_UTILS_AUTH_JWT_BACKEND", 'ege_utils.backends.PreExistentUserJwtBackend')
 
-AUTH_USER_MODEL = env("DJANGO_AUTH_USER_MODEL", 'ege_perfil.Profile')
+# AUTH_USER_MODEL = env("DJANGO_AUTH_USER_MODEL", 'ege_perfil.Profile')
 
 
 # REST Framework

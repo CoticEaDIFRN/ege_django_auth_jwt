@@ -1,7 +1,7 @@
 """
-MIT License
+The MIT License (MIT)
 
-Copyright (c) 2018 IFRN - Campus EaD
+Copyright (c) 2015 kelsoncm
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -21,14 +21,17 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-from django.urls import path
-from .views import LoginView, CompleteView, redirect_to_login, redirect_to_logout
+from unittest import TestCase
+from ege_utils.context_processors import ege
 
-app_name = 'ege_utils'
 
-urlpatterns = [
-    path('jwt/login/', LoginView.as_view(), name='login'),
-    path('jwt/complete/', CompleteView.as_view(), name='complete'),
-    path('admin/login/', redirect_to_login, name='redirect_to_login'),
-    path('admin/logout/', redirect_to_logout, name='redirect_to_logout'),
-]
+class FakeRequest(object):
+    def __init__(self):
+        self.session = {'ege': True}
+
+
+class TestBackends(TestCase):
+    def test_ege_context_processor(self):
+        ins = ege(FakeRequest())
+        print(ins)
+        self.assertTrue(ins['ege'])

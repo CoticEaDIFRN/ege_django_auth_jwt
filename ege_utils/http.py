@@ -21,65 +21,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 from django.conf import settings
-from http.client import HTTPException
-import requests
-import json
-
-default_headers = {"Authorization": "Secret %s" % settings.EGE_ACESSO_JWT_SECRET}
+import sc4net
 
 
-def get(url, headers={}, encoding='utf-8', decode=True, **kwargs):
-    response = requests.get(url, headers=headers.update(default_headers), **kwargs)
-
-    if response.ok:
-        byte_array_content = response.content
-        return byte_array_content.decode(encoding) if decode and encoding is not None else byte_array_content
-    else:
-        exc = HTTPException('%s - %s' % (response.status_code, response.reason))
-        exc.status = response.status_code
-        exc.reason = response.reason
-        exc.headers = response.headers
-        exc.url = url
-        raise exc
-
-
-def get_json(url, headers={}, encoding='utf-8', json_kwargs={}, **kwargs):
-    content = get(url, headers=headers, encoding=encoding, **kwargs)
-    return json.loads(content, **json_kwargs)
-
-
-def post(url, data=None, json_data=None, headers={}, encoding='utf-8', decode=True, **kwargs):
-    response = requests.post(url, data, json_data, headers=headers.update(default_headers), **kwargs)
-
-    if response.ok:
-        byte_array_content = response.content
-        return byte_array_content.decode(encoding) if decode and encoding is not None else byte_array_content
-    else:
-        exc = HTTPException('%s - %s' % (response.status_code, response.reason))
-        exc.status = response.status_code
-        exc.reason = response.reason
-        exc.headers = response.headers
-        exc.url = url
-        raise exc
-
-
-def post_json(url, data=None, json_data=None, headers={}, encoding='utf-8', json_kwargs={}, **kwargs):
-    content = post(url, data, json_data, headers=headers, encoding=encoding, **kwargs)
-    print("content=[", content, "]")
-    return json.loads(content, **json_kwargs)
-
-
-def put(url, data=None, json_data=None, headers={}, encoding='utf-8', **kwargs):
-    raise NotImplementedError()
-
-
-def put_json(url, data=None, json_data=None, headers={}, encoding='utf-8', json_kwargs={}, **kwargs):
-    raise NotImplementedError()
-
-
-def delete(url, headers={}, encoding='utf-8', decode=True, **kwargs):
-    raise NotImplementedError()
-
-
-def delete_json(url, headers={}, encoding='utf-8', json_kwargs={}, **kwargs):
-    raise NotImplementedError()
+sc4net.default_headers = {"Authorization": "Secret %s" % settings.EGE_ACESSO_JWT_SECRET}

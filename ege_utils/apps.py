@@ -24,5 +24,6 @@ SOFTWARE.
 from django.apps import AppConfig
 
 
-class EgeDjangoAuthJwtConfig(AppConfig):
+class EgeUtilsConfig(AppConfig):
     name = 'ege_utils'
+    path = 'ege_utils'

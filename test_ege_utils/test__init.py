@@ -21,3 +21,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
+from unittest import TestCase
+from ege_utils import Ege
+
+
+class TestInit(TestCase):
+
+    def test_init(self):
+        ege = Ege('user', 'profile')
+        self.assertEqual(ege.user, 'user')
+        self.assertEqual(ege.profile, 'profile')
