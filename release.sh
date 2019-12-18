@@ -66,7 +66,7 @@ push_to_github() {
   if [[ "$OPTION" == "-g" || "$OPTION" == "-a" ]]
   then
     printf "\n\n\GITHUB: Pushing\n"
-    git add $PROJECT_NAME/setup.py \
+    git add setup.py \
     && git commit -m "Release $PROJECT_NAME $VERSION" \
     && git tag $VERSION \
     && git push --tags origin master
