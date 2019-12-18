@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 FULL_IMAGE_NAME="ifrn/ege.utils"
-PROJECT_NAME="ege.utils"
+PROJECT_NAME="ege_utils"
 ROOT_DIR=$( pwd )
 time source $ROOT_DIR/release-base.sh
 
