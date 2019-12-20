@@ -77,7 +77,7 @@ send_to_pypi() {
   if [[ "$OPTION" == "-p" || "$OPTION" == "-a" ]]
   then
     printf "\n\n\PYPI: Uploading\n"
-    docker run --rm -it -v `pwd`/$PROJECT_NAME:/src $FULL_IMAGE_NAME:latest twine upload dist/$PROJECT_NAME-$VERSION.tar.gz
+    docker run --rm -it -v `pwd`:/src $FULL_IMAGE_NAME:latest twine upload dist/$PROJECT_NAME-$VERSION.tar.gz
   fi
 }
 
