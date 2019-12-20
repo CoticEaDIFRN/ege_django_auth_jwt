@@ -26,7 +26,7 @@ requests==2.21.0
 twine==1.12.1
 requests==2.21.0
 django>=2.0
-sc4py==0.1.0
+sc4py==0.1.1
 sc4net==0.1.1
 djangorestframework==3.11.0
 
