@@ -21,16 +21,16 @@
 #
 # @author 'Kelson da Costa Medeiros <kelsoncm@gmail.com>'
 
+django==3.0.1
+djangorestframework==3.11.0
 PyJWT==1.7.1
-requests==2.21.0
-twine==1.12.1
-requests==2.21.0
-django>=2.0
+
+# Shorcuts for
 sc4py==0.1.1
 sc4net==0.1.1
-djangorestframework==3.11.0
 
 # build
+twine==1.12.1
 flake8==3.7.9
 coverage==5.0
 django_debug_toolbar==2.1
