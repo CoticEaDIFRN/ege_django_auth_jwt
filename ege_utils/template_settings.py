@@ -29,6 +29,7 @@ LOGGING = {
     'handlers': {'console': {'class': 'logging.StreamHandler'}, },
     'loggers': {
         '': {'handlers': ['console'], 'level': 'DEBUG'},
+        'parso': {'handlers': ['console'], 'level': 'INFO'},
     },
 }
 DEBUG_TOOLBAR_CONFIG = {
