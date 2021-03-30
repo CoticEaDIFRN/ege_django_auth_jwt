@@ -15,7 +15,7 @@ setup(
     download_url='https://github.com/CoticEaDIFRN/ege_utils/releases/tag/1.4.3',
     url='https://github.com/CoticEaDIFRN/ege_utils',
     keywords=['EGE', 'JWT', 'Django', 'Auth', 'SSO', 'client', ],
-    install_requires=['PyJWT==1.7.1', 'django==3.0.1', 'djangorestframework==3.11.0',
+    install_requires=['PyJWT==1.7.1', 'django==3.0.12', 'djangorestframework==3.11.0',
                       'ege_theme', 'sc4py==0.1.1', 'sc4net==0.1.2'],
     classifiers=[]
 )
